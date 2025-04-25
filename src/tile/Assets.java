@@ -6,10 +6,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Единственный кэш всех картинок в игре.
- * Использование: BufferedImage img = Assets.get("/tiles/grass.png");
- */
+
+//Использование: BufferedImage img = Assets.get("/tiles/grass.png");
+
 public final class Assets {
 
     private static final Map<String, BufferedImage> CACHE = new HashMap<>();
