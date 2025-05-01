@@ -12,6 +12,7 @@ public class Enemy extends Entity {
     // ==== настройки врага =====
     private static final int SPEED   = 2;   // шаг в тайлах/кадр
     private static final int AI_RATE = 30;  // раз в N кадров пересчёт направления
+    private static final int DETECT_TILES = 5;
     // ==========================
 
     private int aiCounter = 0;
@@ -47,6 +48,9 @@ public class Enemy extends Entity {
 
     /* ---------- простейший AI + анимация ---------- */
     public void update() {
+        if (!isPlayerInRange()) {
+            return;
+        }
 
         // раз в AI_RATE кадров пересчитать направление — «ползём к игроку»
         if (++aiCounter >= AI_RATE) {
@@ -104,6 +108,12 @@ public class Enemy extends Entity {
         };
         BufferedImage img = frames[dir][spriteNum - 1];
         g2.drawImage(img, screenX, screenY, gp.tileSize, gp.tileSize, null);
+    }
+    private boolean isPlayerInRange() {
+        int dx = gp.player.worldX - worldX;
+        int dy = gp.player.worldY - worldY;
+        double distance = Math.hypot(dx, dy);
+        return distance <= DETECT_TILES * gp.tileSize;
     }
     @Override
     public Enemy clone() {
