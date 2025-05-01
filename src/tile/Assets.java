@@ -7,13 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-//Использование: BufferedImage img = Assets.get("/tiles/grass.png");
-
 public final class Assets {
 
     private static final Map<String, BufferedImage> CACHE = new HashMap<>();
 
-    // приватный конструктор — никто не может создать экземпляр
     private Assets() {}
 
     public static BufferedImage get(String path) {

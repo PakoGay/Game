@@ -5,6 +5,9 @@ import main.GameplayScreen;
 import java.awt.*;
 
 public abstract class Entity implements Cloneable {
+    public int maxHealth;
+    public int health;
+
     GameplayScreen gp;
     public int worldX,worldY;
     public int speed;

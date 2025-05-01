@@ -9,9 +9,8 @@ public final class SoundManager {
 
     private static final Map<String, Clip> CACHE = new HashMap<>();
 
-    private SoundManager() {/* singleton */}
+    private SoundManager() {}
 
-    /** Получить готовый Clip (загружает и кэширует при первом обращении) */
     public static Clip get(String path) {
         return CACHE.computeIfAbsent(path, p -> {
             try {

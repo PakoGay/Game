@@ -38,6 +38,7 @@ public class Player extends Entity{
         worldY = gp.tileSize*27;
         speed = 5;
         direction = "down";
+        health = 20;
     }
     BufferedImage[][] frames = new BufferedImage[4][8]; // 0-UP,1-DOWN,2-LEFT,3-RIGHT
 

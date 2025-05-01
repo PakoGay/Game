@@ -6,25 +6,27 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 
-/**
- * Отвечает только за цикл игры и вывод буфера на экран.
- * Здесь сохранены имена переменных, аналогичные исходному GamePanel.
- */
 public class GameCanvas extends Canvas implements Runnable {
 
     private final JFrame frame;
     private volatile boolean running;
     private Thread gameThread;
-
     private Screen currentScreen;
+    private final int screenWidth;
+    private final int screenHeight;
+    private final int fps;
 
     public GameCanvas(GameplayScreen startScreen) {
+
         this.currentScreen = startScreen;
 
-        // размеры берём у самого экрана
-        setPreferredSize(new Dimension(startScreen.screenWidth, startScreen.screenHeight));
+        this.screenWidth  = startScreen.screenWidth;
+        this.screenHeight = startScreen.screenHeight;
+        this.fps = startScreen.FPS;
 
-        frame = new JFrame("Fucking game");
+        setPreferredSize(new Dimension(screenWidth, screenHeight));
+
+        frame = new JFrame("Final game");
         frame.add(this);
         frame.pack();
         frame.setResizable(false);
@@ -34,6 +36,10 @@ public class GameCanvas extends Canvas implements Runnable {
             @Override public void windowClosing(WindowEvent e) { stop(); }
         });
         frame.setVisible(true);
+    }
+
+    public void setScreen(Screen newScreen) {
+        this.currentScreen = newScreen;
     }
 
     public synchronized void start() {
@@ -49,17 +55,18 @@ public class GameCanvas extends Canvas implements Runnable {
         frame.dispose();
     }
 
-    @Override public void run() {
+    @Override
+    public void run() {
         createBufferStrategy(2);
         BufferStrategy bs = getBufferStrategy();
 
-        GameplayScreen gs = (GameplayScreen) currentScreen; // понадобятся FPS
         long last = System.nanoTime();
-        final double nsPerFrame = 1_000_000_000.0 / gs.FPS;
+        final double nsPerFrame = 1_000_000_000.0 / fps;
 
         while (running) {
             long now = System.nanoTime();
             if (now - last < nsPerFrame) continue;
+
             float dt = (float)((now - last) / 1_000_000_000.0);
             last = now;
 
@@ -69,9 +76,9 @@ public class GameCanvas extends Canvas implements Runnable {
                 do {
                     Graphics2D g = (Graphics2D) bs.getDrawGraphics();
                     g.setColor(Color.BLACK);
-                    g.fillRect(0, 0, gs.screenWidth, gs.screenHeight);
-
+                    g.fillRect(0, 0, screenWidth, screenHeight);
                     currentScreen.render(g);
+
                     g.dispose();
                 } while (bs.contentsRestored());
                 bs.show();

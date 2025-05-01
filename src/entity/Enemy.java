@@ -9,11 +9,10 @@ import java.io.IOException;
 
 public class Enemy extends Entity {
 
-    // ==== настройки врага =====
-    private static final int SPEED   = 2;   // шаг в тайлах/кадр
-    private static final int AI_RATE = 30;  // раз в N кадров пересчёт направления
-    private static final int DETECT_TILES = 5;
-    // ==========================
+    //настройки врага
+    private static final int en_speed   = 3;   // шаг в тайлах/кадр
+    private static final int ai_rate = 30;  // раз в N кадров пересчёт направления
+    private static final int tile_detect = 7;
 
     private int aiCounter = 0;
 
@@ -25,14 +24,14 @@ public class Enemy extends Entity {
         super(gp);
         this.worldX = startWorldX;
         this.worldY = startWorldY;
-        this.speed  = SPEED;
+        this.speed  = en_speed;
         this.direction = "down";
 
         solidArea = new Rectangle(8, 16, 32, 32);   // хит-бокс поменьше
         loadImages();
     }
 
-    /* ---------- ресурс-лоадер ---------- */
+    //ресурс лоадер
     private void loadImages() {
         try {
             for (int i = 0; i < 8; i++) {
@@ -46,14 +45,12 @@ public class Enemy extends Entity {
         }
     }
 
-    /* ---------- простейший AI + анимация ---------- */
     public void update() {
         if (!isPlayerInRange()) {
             return;
         }
 
-        // раз в AI_RATE кадров пересчитать направление — «ползём к игроку»
-        if (++aiCounter >= AI_RATE) {
+        if (++aiCounter >= ai_rate) {
             aiCounter = 0;
 
             int dx = gp.player.worldX - worldX;
@@ -87,14 +84,11 @@ public class Enemy extends Entity {
         }
     }
 
-    /* ---------- вывод на экран ---------- */
     public void draw(Graphics2D g2) {
 
-        // перевод мировых координат во «внутриэкраные»
         int screenX = worldX - gp.player.worldX + gp.player.screenX;
         int screenY = worldY - gp.player.worldY + gp.player.screenY;
 
-        // за пределы экрана не рисуем
         if (screenX + gp.tileSize < 0 || screenX > gp.screenWidth ||
                 screenY + gp.tileSize < 0 || screenY > gp.screenHeight) {
             return;
@@ -113,7 +107,7 @@ public class Enemy extends Entity {
         int dx = gp.player.worldX - worldX;
         int dy = gp.player.worldY - worldY;
         double distance = Math.hypot(dx, dy);
-        return distance <= DETECT_TILES * gp.tileSize;
+        return distance <= tile_detect * gp.tileSize;
     }
     @Override
     public Enemy clone() {
